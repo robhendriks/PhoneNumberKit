@@ -24,6 +24,22 @@ public final class PhoneNumberKit: NSObject {
         self.parseManager = ParseManager(metadataManager: metadataManager, regexManager: regexManager)
     }
 
+    // MARK: Happy Me
+    
+    public typealias Territory = (codeID: String, countryCode: UInt64)
+    
+    public func territories() -> [Territory] {
+        return metadataManager.territories.map { ($0.codeID, $0.countryCode) }
+    }
+    
+    public func defaultTerritory() -> Territory? {
+        let codeID = PhoneNumberKit.defaultRegionCode()
+        if let countryCode = countryCode(for: codeID) {
+            return (codeID: codeID, countryCode: countryCode)
+        }
+        return nil
+    }
+    
     // MARK: Parsing
     
     /// Parses a number string, used to create PhoneNumber objects. Throws.
